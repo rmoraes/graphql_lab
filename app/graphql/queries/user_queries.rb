@@ -7,12 +7,12 @@ module Queries
     extend ActiveSupport::Concern
 
     included do
-      field :user, Types::UserType, null: true do
+      field :user, Types::Models::UserType, null: true do
         description 'Find a user by ID'
         argument :id, GraphQL::Types::ID, required: true
       end
 
-      field :users, [Types::UserType], null: true, description: 'List all users or filter by email' do
+      field :users, [Types::Models::UserType], null: true, description: 'List all users or filter by email' do
         argument :email, String, required: false, description: 'Filter users by email'
       end
     end
