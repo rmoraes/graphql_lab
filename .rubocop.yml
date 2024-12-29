@@ -1,0 +1,19 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.1
+  Exclude:
+    - "db/schema.rb"
+    - "db/migrate/*"
+    - "db/seeds.rb"
+    - "lib/tasks/*"
+    - "**/Rakefile"
+    - "bin/**/*"
+    - "config/**/*"
+    - "tmp/**/*"
+    - "docs/**/*"
+    - "config.ru"
+
+Layout/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 50

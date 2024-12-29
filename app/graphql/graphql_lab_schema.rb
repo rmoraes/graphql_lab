@@ -1,45 +1,66 @@
 # frozen_string_literal: true
 
+# This class defines the GraphQL schema for the application.
+# It connects the root `query` and `mutation` types to the GraphQL execution engine
+# and configures features like batch loading, error handling, and Relay-style object identification.
 class GraphqlLabSchema < GraphQL::Schema
+  # Specifies the root mutation type of the schema.
+  # All mutations are defined in the `Types::MutationType` class.
   mutation(Types::MutationType)
+
+  # Specifies the root query type of the schema.
+  # All queries are defined in the `Types::QueryType` class.
   query(Types::QueryType)
 
-  # For batch-loading (see https://graphql-ruby.org/dataloader/overview.html)
+  # Enables batch-loading functionality for efficient data fetching.
+  # This is especially useful for optimizing N+1 query problems.
+  # For more details, see: https://graphql-ruby.org/dataloader/overview.html
   use GraphQL::Dataloader
 
-  # GraphQL-Ruby calls this when something goes wrong while running a query:
-  def self.type_error(err, context)
-    # if err.is_a?(GraphQL::InvalidNullError)
-    #   # report to your bug tracker here
-    #   return nil
-    # end
-    super
-  end
-
-  # Union and Interface Resolution
-  def self.resolve_type(abstract_type, obj, ctx)
-    # TODO: Implement this method
-    # to return the correct GraphQL object type for `obj`
+  # Handles type resolution for union types and interfaces.
+  # This method determines which specific GraphQL type corresponds to a given object.
+  # It must be implemented to support unions and interfaces.
+  #
+  # @param _abstract_type [GraphQL::BaseType] The abstract type being resolved (e.g., a union or interface).
+  # @param _obj [Object] The object being resolved.
+  # @param _ctx [GraphQL::Query::Context] The query context.
+  # @raise [GraphQL::RequiredImplementationMissingError] If not implemented.
+  def self.resolve_type(_abstract_type, _obj, _ctx)
+    # TODO: Implement this method to map objects to their GraphQL types.
     raise(GraphQL::RequiredImplementationMissingError)
   end
 
-  # Limit the size of incoming queries:
+  # Limits the size of incoming queries to prevent excessively large or malicious queries.
+  #
+  # @param max_query_string_tokens [Integer] The maximum number of tokens allowed in a query string.
   max_query_string_tokens(5000)
 
-  # Stop validating when it encounters this many errors:
+  # Specifies the maximum number of validation errors allowed before stopping validation.
+  # This prevents the execution engine from spending too much time processing invalid queries.
+  #
+  # @param max_errors [Integer] The maximum number of validation errors.
   validate_max_errors(100)
 
-  # Relay-style Object Identification:
+  # Implements Relay-style object identification for resolving and encoding object IDs.
 
-  # Return a string UUID for `object`
-  def self.id_from_object(object, type_definition, query_ctx)
-    # For example, use Rails' GlobalID library (https://github.com/rails/globalid):
+  # Encodes an object into a globally unique ID.
+  #
+  # @param object [Object] The object to be encoded.
+  # @param _type_definition [GraphQL::BaseType] The GraphQL type of the object.
+  # @param _query_ctx [GraphQL::Query::Context] The query context.
+  # @return [String] A globally unique identifier for the object.
+  def self.id_from_object(object, _type_definition, _query_ctx)
+    # Uses Rails' GlobalID to generate a globally unique ID.
     object.to_gid_param
   end
 
-  # Given a string UUID, find the object
-  def self.object_from_id(global_id, query_ctx)
-    # For example, use Rails' GlobalID library (https://github.com/rails/globalid):
+  # Decodes a globally unique ID into an object.
+  #
+  # @param global_id [String] The globally unique identifier.
+  # @param _query_ctx [GraphQL::Query::Context] The query context.
+  # @return [Object] The object corresponding to the given ID.
+  def self.object_from_id(global_id, _query_ctx)
+    # Uses Rails' GlobalID to find the object from its global ID.
     GlobalID.find(global_id)
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -30,19 +32,19 @@ gem 'graphql'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'rubocop', '~> 1.22.2', require: false
+  gem 'rubocop-rails', '~> 2.12.4', require: false
 end
 
 group :development do
   gem 'graphiql-rails'
 
   gem 'listen', '~> 3.3'
-  gem "propshaft", "~> 1.1"
+  gem 'propshaft', '~> 1.1'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
