@@ -13,18 +13,6 @@ module Types
   #
   # Currently, this class includes a placeholder mutation field `test_field` as an example.
   class MutationType < Types::BaseObject
-    # A placeholder field added by the Rails generator to demonstrate how mutations work.
-    #
-    # @return [String] Always returns "Hello World".
-    field :test_field, String, null: false,
-                               description: 'An example field added by the generator'
-
-    # Resolver method for the `test_field` mutation.
-    # When this mutation is executed, it always returns the string "Hello World".
-    #
-    # @return [String] The string "Hello World".
-    def test_field
-      'Hello World'
-    end
+    field :create_user, mutation: Mutations::CreateUser
   end
 end
