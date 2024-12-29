@@ -12,8 +12,10 @@ module Queries
         argument :id, GraphQL::Types::ID, required: true
       end
 
-      field :users, [Types::Models::UserType], null: true, description: 'List all users or filter by email' do
+      field :users, [Types::Models::UserType], null: true, description: 'List all users or filter' do
+        argument :name, [String], required: false, description: 'Filter users by a list of partial names, allowing matches based on any substring.' # rubocop:disable Layout/LineLength
         argument :email, String, required: false, description: 'Filter users by email'
+        argument :address_city, [String], required: false, description: 'Filter users by city in their address'
       end
     end
 
@@ -22,13 +24,9 @@ module Queries
       User.find_by(id: id)
     end
 
-    # Resolver for users with optional email filtering
-    def users(email: nil)
-      if email.present?
-        User.where(email: email)
-      else
-        User.all
-      end
+    # Resolver for users with optional filtering
+    def users(**args)
+      User.filter_by(args.compact)
     end
   end
 end
