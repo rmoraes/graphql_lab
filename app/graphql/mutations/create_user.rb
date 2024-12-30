@@ -12,14 +12,13 @@ module Mutations
     field :user, Types::Models::UserType, null: true, description: 'The newly created user'
     field :errors, [String], null: false, description: 'A list of errors encountered during user creation'
 
-    # Resolver
     def resolve(name:, email:, address: nil)
       address_hash = address.to_h if address
 
       user = User.new(name: name, email: email, address_attributes: address_hash)
 
       if user.save
-        { user: user }
+        { user: user, errors: [] }
       else
         { user: nil, errors: user.errors.full_messages }
       end
