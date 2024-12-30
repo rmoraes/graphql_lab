@@ -23,7 +23,7 @@ module Mutations
       attributes[:address_attributes] = address_hash if address_hash
 
       if user.update(attributes)
-        { user: user }
+        { user: user, errors: [] }
       else
         { user: nil, errors: user.errors.full_messages }
       end
