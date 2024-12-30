@@ -9,6 +9,10 @@ class User < ApplicationRecord
 
   has_many :tasks, dependent: :destroy
 
+  validates :name, :email, presence: true
+  validates :name, :email, length: { maximum: 50 }
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+
   scope :filter_by_name, ->(value) { where_matches_any name: value }
   scope :filter_by_email, ->(value) { where email: value }
   scope :filter_by_address_city, ->(value) { where_matches_any association: { address: { city: value } } }
