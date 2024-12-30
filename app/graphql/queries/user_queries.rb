@@ -26,7 +26,7 @@ module Queries
 
     # Resolver for users with optional filtering
     def users(**args)
-      User.filter_by(args.compact)
+      User.filter_by(args.compact).includes(:address)
     end
   end
 end
